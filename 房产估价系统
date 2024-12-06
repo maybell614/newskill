@@ -1,0 +1,306 @@
+import React, { useState } from 'react';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Alert } from '@/components/ui/alert';
+
+const TabButton = ({ active, onClick, children }) => {
+  return (
+    <button
+      className={`px-6 py-2 rounded-t-lg text-base ${
+        active 
+          ? 'bg-white border-t border-x text-blue-600 font-medium' 
+          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+      }`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+
+const BasicInfoForm = ({ data, onUpdate }) => {
+  return (
+    <Card className="p-6">
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">所在城市</label>
+            <input 
+              type="text"
+              className="p-2 border rounded"
+              placeholder="请输入城市名称"
+              value={data.city}
+              onChange={(e) => onUpdate('city', e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">建筑面积（㎡）</label>
+            <input 
+              type="number"
+              className="p-2 border rounded"
+              placeholder="请输入建筑面积"
+              value={data.totalArea}
+              onChange={(e) => onUpdate('totalArea', e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">所在楼层</label>
+            <input 
+              type="number"
+              className="p-2 border rounded"
+              placeholder="请输入楼层"
+              value={data.floor}
+              onChange={(e) => onUpdate('floor', e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">房屋朝向</label>
+            <select 
+              className="p-2 border rounded"
+              value={data.orientation}
+              onChange={(e) => onUpdate('orientation', e.target.value)}
+            >
+              <option value="">请选择朝向</option>
+              <option value="南北">南北通透</option>
+              <option value="东西">东西朝向</option>
+              <option value="南向">南向</option>
+              <option value="北向">北向</option>
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">装修程度</label>
+            <select 
+              className="p-2 border rounded"
+              value={data.decoration}
+              onChange={(e) => onUpdate('decoration', e.target.value)}
+            >
+              <option value="">请选择装修程度</option>
+              <option value="毛坯">毛坯</option>
+              <option value="简装">简装</option>
+              <option value="精装">精装</option>
+              <option value="豪装">豪装</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+const AmenityRating = ({ data, onUpdate }) => {
+  const amenities = [
+    { key: 'education', label: '教育配套' },
+    { key: 'transportation', label: '交通情况' },
+    { key: 'commercial', label: '商业配套' },
+    { key: 'medical', label: '医疗设施' },
+    { key: 'environment', label: '环境景观' }
+  ];
+
+  return (
+    <Card className="p-6">
+      <div className="space-y-4">
+        {amenities.map(amenity => (
+          <div key={amenity.key} className="flex items-center gap-4">
+            <span className="w-32 text-sm font-medium">{amenity.label}</span>
+            <select 
+              className="p-2 border rounded w-40"
+              value={data[amenity.key]}
+              onChange={(e) => onUpdate(amenity.key, parseInt(e.target.value))}
+            >
+              <option value="1">很差</option>
+              <option value="2">较差</option>
+              <option value="3">一般</option>
+              <option value="4">较好</option>
+              <option value="5">很好</option>
+            </select>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+};
+
+const ComparableAnalysis = ({ data, onUpdate }) => {
+  return (
+    <Card className="p-6">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-gray-50">
+              <th className="p-3 text-left border">比较项目</th>
+              <th className="p-3 text-left border">待估房产</th>
+              <th className="p-3 text-left border">可比案例1</th>
+              <th className="p-3 text-left border">可比案例2</th>
+              <th className="p-3 text-left border">可比案例3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="p-3 border">成交价格(万元)</td>
+              <td className="p-3 border">--</td>
+              <td className="p-3 border">
+                <input type="number" className="w-full p-1 border rounded" />
+              </td>
+              <td className="p-3 border">
+                <input type="number" className="w-full p-1 border rounded" />
+              </td>
+              <td className="p-3 border">
+                <input type="number" className="w-full p-1 border rounded" />
+              </td>
+            </tr>
+            <tr>
+              <td className="p-3 border">建筑面积(㎡)</td>
+              <td className="p-3 border">
+                <input type="number" className="w-full p-1 border rounded" />
+              </td>
+              <td className="p-3 border">
+                <input type="number" className="w-full p-1 border rounded" />
+              </td>
+              <td className="p-3 border">
+                <input type="number" className="w-full p-1 border rounded" />
+              </td>
+              <td className="p-3 border">
+                <input type="number" className="w-full p-1 border rounded" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </Card>
+  );
+};
+
+const ValuationResult = ({ data }) => {
+  return (
+    <Card className="mt-6 p-6">
+      <CardHeader>
+        <h3 className="text-lg font-medium">估值结果</h3>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <span>市场比较法估值：</span>
+            <span className="font-medium">{data.comparisonValue} 万元</span>
+          </div>
+          <div className="flex justify-between">
+            <span>收益法估值：</span>
+            <span className="font-medium">{data.incomeValue} 万元</span>
+          </div>
+          <div className="flex justify-between text-lg font-bold">
+            <span>最终估值：</span>
+            <span>{data.finalValue} 万元</span>
+          </div>
+          <Alert>
+            建议价格区间：{data.valueRange.min} - {data.valueRange.max} 万元
+          </Alert>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const RealEstateValuation = () => {
+  const [activeTab, setActiveTab] = useState('basic');
+  const [valuationData, setValuationData] = useState({
+    basicInfo: {
+      city: '',
+      totalArea: '',
+      floor: '',
+      orientation: '',
+      decoration: ''
+    },
+    amenityRating: {
+      education: 3,
+      transportation: 3,
+      commercial: 3,
+      medical: 3,
+      environment: 3
+    },
+    valuationResult: {
+      comparisonValue: 580,
+      incomeValue: 560,
+      finalValue: 570,
+      valueRange: { min: 550, max: 590 }
+    }
+  });
+
+  return (
+    <div className="max-w-6xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">房地产估值分析系统</h1>
+      
+      <div className="flex space-x-2 mb-6">
+        <TabButton 
+          active={activeTab === 'basic'} 
+          onClick={() => setActiveTab('basic')}
+        >
+          基础信息
+        </TabButton>
+        <TabButton 
+          active={activeTab === 'amenity'} 
+          onClick={() => setActiveTab('amenity')}
+        >
+          配套评分
+        </TabButton>
+        <TabButton 
+          active={activeTab === 'comparable'} 
+          onClick={() => setActiveTab('comparable')}
+        >
+          可比案例
+        </TabButton>
+      </div>
+
+      <div className="mt-4">
+        {activeTab === 'basic' && (
+          <BasicInfoForm 
+            data={valuationData.basicInfo}
+            onUpdate={(key, value) => {
+              setValuationData(prev => ({
+                ...prev,
+                basicInfo: {
+                  ...prev.basicInfo,
+                  [key]: value
+                }
+              }));
+            }}
+          />
+        )}
+        {activeTab === 'amenity' && (
+          <AmenityRating
+            data={valuationData.amenityRating}
+            onUpdate={(key, value) => {
+              setValuationData(prev => ({
+                ...prev,
+                amenityRating: {
+                  ...prev.amenityRating,
+                  [key]: value
+                }
+              }));
+            }}
+          />
+        )}
+        {activeTab === 'comparable' && (
+          <ComparableAnalysis
+            data={valuationData.comparableData}
+            onUpdate={(key, comp, value) => {
+              setValuationData(prev => ({
+                ...prev,
+                comparableData: {
+                  ...prev.comparableData,
+                  [key]: {
+                    ...prev.comparableData[key],
+                    [comp]: value
+                  }
+                }
+              }));
+            }}
+          />
+        )}
+      </div>
+
+      <ValuationResult data={valuationData.valuationResult} />
+    </div>
+  );
+};
+
+export default RealEstateValuation;
